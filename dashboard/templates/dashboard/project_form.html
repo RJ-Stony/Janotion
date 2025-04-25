@@ -1,0 +1,182 @@
+{% extends 'base.html' %} {% block content %}
+<div class="notion-form-container">
+  <div class="notion-form-header">
+    <div class="page-icon">
+      <i class="fas fa-project-diagram"></i>
+    </div>
+    <h1 class="form-title">
+      {% if form.instance.pk %}프로젝트 수정{% else %}새 프로젝트{% endif %}
+    </h1>
+  </div>
+
+  <form method="post" class="notion-form">
+    {% csrf_token %}
+
+    <div class="notion-form-section">
+      <div class="notion-form-group">
+        <label for="{{ form.name.id_for_label }}" class="notion-form-label">프로젝트 이름</label>
+        <div class="notion-input-wrapper">
+          {{ form.name }}
+          {% if form.name.errors %}
+          <div class="notion-form-error">{{ form.name.errors }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="notion-form-group">
+        <label for="{{ form.manager.id_for_label }}" class="notion-form-label">담당자</label>
+        <div class="notion-input-wrapper">
+          {{ form.manager }}
+          {% if form.manager.errors %}
+          <div class="notion-form-error">{{ form.manager.errors }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="notion-form-row">
+        <div class="notion-form-col">
+          <div class="notion-form-group">
+            <label for="{{ form.start_date.id_for_label }}" class="notion-form-label">시작일</label>
+            <div class="notion-input-wrapper date-input">
+              <i class="far fa-calendar"></i>
+              {{ form.start_date }}
+              {% if form.start_date.errors %}
+              <div class="notion-form-error">{{ form.start_date.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="notion-form-col">
+          <div class="notion-form-group">
+            <label for="{{ form.end_date.id_for_label }}" class="notion-form-label">종료일</label>
+            <div class="notion-input-wrapper date-input">
+              <i class="far fa-calendar"></i>
+              {{ form.end_date }}
+              {% if form.end_date.errors %}
+              <div class="notion-form-error">{{ form.end_date.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="notion-form-group">
+        <label for="{{ form.status.id_for_label }}" class="notion-form-label">상태</label>
+        <div class="notion-select-wrapper">
+          {{ form.status }}
+          {% if form.status.errors %}
+          <div class="notion-form-error">{{ form.status.errors }}</div>
+          {% endif %}
+        </div>
+      </div>
+      
+      <div class="notion-form-group">
+        <label for="{{ form.progress.id_for_label }}" class="notion-form-label">진행률 (%)</label>
+        <div class="notion-input-wrapper">
+          {{ form.progress }}
+          {% if form.progress.errors %}
+          <div class="notion-form-error">{{ form.progress.errors }}</div>
+          {% endif %}
+          <div class="progress-preview">
+            <div class="progress-bar-preview">
+              <div class="progress-fill-preview" style="width: {{ form.instance.progress|default:0 }}%"></div>
+            </div>
+            <span class="progress-text-preview">{{ form.instance.progress|default:0 }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notion-form-actions">
+      <a href="{% url 'dashboard' %}" class="notion-button">취소</a>
+      <button type="submit" class="notion-button primary">저장</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 폼 필드 초기화
+    const inputFields = document.querySelectorAll('.notion-form input, .notion-form select, .notion-form textarea');
+    
+    inputFields.forEach(input => {
+      // 기존 클래스에 notion-input 추가
+      input.classList.add('notion-input');
+      
+      // 포커스 이벤트 처리
+      input.addEventListener('focus', function() {
+        const wrapper = this.closest('.notion-input-wrapper');
+        if (wrapper) wrapper.classList.add('focused');
+      });
+      
+      input.addEventListener('blur', function() {
+        const wrapper = this.closest('.notion-input-wrapper');
+        if (wrapper) wrapper.classList.remove('focused');
+      });
+    });
+    
+    // 자동 포맷팅을 위한 날짜 필드 설정
+    const dateFields = document.querySelectorAll('input[type="date"]');
+    dateFields.forEach(field => {
+      if (!field.value) {
+        const today = new Date();
+        const formattedDate = today.toISOString().substr(0, 10);
+        // 시작일은 오늘, 종료일은 한 달 후로 설정
+        if (field.id.includes('end_date')) {
+          const oneMonthLater = new Date();
+          oneMonthLater.setMonth(today.getMonth() + 1);
+          field.value = oneMonthLater.toISOString().substr(0, 10);
+        } else {
+          field.value = formattedDate;
+        }
+      }
+    });
+    
+    // 진행률 슬라이더 처리
+    const progressInput = document.getElementById('{{ form.progress.id_for_label }}');
+    const progressFill = document.querySelector('.progress-fill-preview');
+    const progressText = document.querySelector('.progress-text-preview');
+    
+    if (progressInput) {
+      progressInput.addEventListener('input', function() {
+        const value = this.value || 0;
+        progressFill.style.width = value + '%';
+        progressText.textContent = value + '%';
+      });
+    }
+  });
+</script>
+
+<style>
+  .progress-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 0 12px 12px;
+  }
+  
+  .progress-bar-preview {
+    flex: 1;
+    height: 6px;
+    background-color: #edf2f7;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  
+  .progress-fill-preview {
+    height: 100%;
+    background-color: var(--notion-accent);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  
+  .progress-text-preview {
+    font-size: 12px;
+    color: #718096;
+    min-width: 35px;
+    text-align: right;
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,555 @@
+{% extends 'base.html' %} 
+{% block content %}
+{% csrf_token %}
+<div class="notion-container">
+  <!-- 메인 콘텐츠 영역 -->
+  <div class="main-content">
+    <!-- 상단 네비게이션 메뉴 (서비스에 맞게 수정) -->
+    <div class="notion-top-menu">
+      <div class="top-menu-item active" data-view="board">
+        <i class="fas fa-columns"></i> 보드
+      </div>
+      <div class="top-menu-item" data-view="table">
+        <i class="fas fa-table"></i> 테이블
+      </div>
+      <div class="top-menu-item" data-view="timeline">
+        <i class="fas fa-calendar-alt"></i> 타임라인
+      </div>
+      <div class="top-menu-item" data-view="list">
+        <i class="fas fa-list"></i> 리스트
+      </div>
+    </div>
+
+    <!-- 프로젝트 헤더 -->
+    <div class="projects-header">
+      <div class="projects-title">
+        <i class="fas fa-circle"></i>
+        프로젝트 관리
+      </div>
+    </div>
+
+    <!-- 콘텐츠 영역 -->
+    <div class="notion-views">
+      <!-- 보드 뷰 -->
+      <div id="board-view" class="notion-view active-view">
+        <!-- 칸반 보드 컨테이너 -->
+        <div class="board-container">
+          <div class="board-columns">
+            <!-- 계획됨 컬럼 -->
+            <div class="board-column">
+              <div class="column-header">
+                <div class="column-name">
+                  <div class="status-indicator planned"></div>
+                  계획됨
+                  <span class="column-count">0</span>
+                </div>
+              </div>
+              <div class="column-content" id="planned-column">
+                {% for project in projects %}
+                  {% if project.status == 'planned' or not project.status %}
+                  <a href="{% url 'project-detail' project.id %}" class="notion-card" data-project-id="{{ project.id }}">
+                    <div class="card-content">
+                      <div class="card-title">{{ project.name }}</div>
+                      <div class="card-meta">
+                        <div class="meta-item">
+                          {{ project.start_date|date:"Y년 m월 d일" }} → {{ project.end_date|date:"Y년 m월 d일" }}
+                        </div>
+                        <div class="status-tag planned">계획됨</div>
+                      </div>
+                    </div>
+                  </a>
+                  {% endif %}
+                {% endfor %}
+                <div class="add-card-btn" onclick="window.location.href='{% url 'project-create' %}'">
+                  <i class="fas fa-plus"></i> 새 프로젝트
+                </div>
+              </div>
+            </div>
+
+            <!-- 진행중 컬럼 -->
+            <div class="board-column">
+              <div class="column-header">
+                <div class="column-name">
+                  <div class="status-indicator progress"></div>
+                  진행중
+                  <span class="column-count">0</span>
+                </div>
+              </div>
+              <div class="column-content" id="progress-column">
+                {% for project in projects %}
+                  {% if project.status == 'in_progress' %}
+                  <a href="{% url 'project-detail' project.id %}" class="notion-card" data-project-id="{{ project.id }}">
+                    <div class="card-content">
+                      <div class="card-title">{{ project.name }}</div>
+                      <div class="card-meta">
+                        <div class="meta-item">
+                          {{ project.start_date|date:"Y년 m월 d일" }} → {{ project.end_date|date:"Y년 m월 d일" }}
+                        </div>
+                        <div class="status-tag progress">진행중</div>
+                      </div>
+                    </div>
+                  </a>
+                  {% endif %}
+                {% endfor %}
+                <div class="add-card-btn" onclick="window.location.href='{% url 'project-create' %}'">
+                  <i class="fas fa-plus"></i> 새 프로젝트
+                </div>
+              </div>
+            </div>
+
+            <!-- 지연 컬럼 -->
+            <div class="board-column">
+              <div class="column-header">
+                <div class="column-name">
+                  <div class="status-indicator delayed"></div>
+                  지연
+                  <span class="column-count">0</span>
+                </div>
+              </div>
+              <div class="column-content" id="delayed-column">
+                {% for project in projects %}
+                  {% if project.status == 'delayed' %}
+                  <a href="{% url 'project-detail' project.id %}" class="notion-card" data-project-id="{{ project.id }}">
+                    <div class="card-content">
+                      <div class="card-title">{{ project.name }}</div>
+                      <div class="card-meta">
+                        <div class="meta-item">
+                          {{ project.start_date|date:"Y년 m월 d일" }} → {{ project.end_date|date:"Y년 m월 d일" }}
+                        </div>
+                        <div class="status-tag delayed">지연</div>
+                      </div>
+                    </div>
+                  </a>
+                  {% endif %}
+                {% endfor %}
+                <div class="add-card-btn" onclick="window.location.href='{% url 'project-create' %}'">
+                  <i class="fas fa-plus"></i> 새 프로젝트
+                </div>
+              </div>
+            </div>
+
+            <!-- 완료 컬럼 -->
+            <div class="board-column">
+              <div class="column-header">
+                <div class="column-name">
+                  <div class="status-indicator completed"></div>
+                  완료
+                  <span class="column-count">0</span>
+                </div>
+              </div>
+              <div class="column-content" id="completed-column">
+                {% for project in projects %}
+                  {% if project.status == 'completed' %}
+                  <a href="{% url 'project-detail' project.id %}" class="notion-card" data-project-id="{{ project.id }}">
+                    <div class="card-content">
+                      <div class="card-title">{{ project.name }}</div>
+                      <div class="card-meta">
+                        <div class="meta-item">
+                          {{ project.start_date|date:"Y년 m월 d일" }} → {{ project.end_date|date:"Y년 m월 d일" }}
+                        </div>
+                        <div class="status-tag completed">완료</div>
+                      </div>
+                    </div>
+                  </a>
+                  {% endif %}
+                {% endfor %}
+                <div class="add-card-btn" onclick="window.location.href='{% url 'project-create' %}'">
+                  <i class="fas fa-plus"></i> 새 프로젝트
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 테이블 뷰 -->
+      <div id="table-view" class="notion-view">
+        <div class="notion-table-wrapper">
+          <table class="notion-table">
+            <thead>
+              <tr>
+                <th>프로젝트명</th>
+                <th>담당자</th>
+                <th>기간</th>
+                <th>진행률</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for project in projects %}
+              <tr>
+                <td class="cell-name">
+                  <a href="{% url 'project-detail' project.id %}">{{ project.name }}</a>
+                </td>
+                <td>
+                  <div class="cell-user">
+                    <i class="far fa-user"></i>
+                    <span>{{ project.manager }}</span>
+                  </div>
+                </td>
+                <td>{{ project.start_date|date:"Y년 m월 d일" }} ~ {{ project.end_date|date:"Y년 m월 d일" }}</td>
+                <td>
+                  <div class="cell-progress">
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width: {{ project.progress|default:0 }}%"></div>
+                    </div>
+                    <span class="progress-text">{{ project.progress|default:0 }}%</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="cell-status status-{{ project.status|default:'planned' }}">
+                    {% if project.status == 'completed' %}완료
+                    {% elif project.status == 'in_progress' %}진행중
+                    {% elif project.status == 'delayed' %}지연
+                    {% else %}계획됨{% endif %}
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="empty-message">
+                  <div class="empty-state">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>프로젝트가 없습니다</h3>
+                    <p>새 프로젝트를 생성하여 작업을 시작해보세요</p>
+                    <button class="notion-btn primary" onclick="window.location.href='{% url 'project-create' %}'">
+                      <i class="fas fa-plus"></i> 프로젝트 생성
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 타임라인 뷰 -->
+      <div id="timeline-view" class="notion-view">
+        <div style="padding:32px;">
+          <div class="gantt-controls" style="margin-bottom: 16px;">
+            <div class="btn-group">
+              <button class="gantt-view-btn active" data-view="Day">일</button>
+              <button class="gantt-view-btn" data-view="Week">주</button>
+              <button class="gantt-view-btn" data-view="Month">월</button>
+            </div>
+          </div>
+          <div id="gantt-target" style="width:100%; height:500px;"></div>
+        </div>
+      </div>
+
+      <!-- 리스트 뷰 -->
+      <div id="list-view" class="notion-view">
+        <div class="list-items">
+          {% for project in projects %}
+          <a href="{% url 'project-detail' project.id %}" class="list-item">
+            <div class="list-item-header">
+              <h3 class="list-item-title">{{ project.name }}</h3>
+              <div class="list-item-status status-{{ project.status|default:'planned' }}">
+                {% if project.status == 'completed' %}완료
+                {% elif project.status == 'in_progress' %}진행중
+                {% elif project.status == 'delayed' %}지연
+                {% else %}계획됨{% endif %}
+              </div>
+            </div>
+            <div class="list-item-details">
+              <div class="list-item-info">
+                <div class="info-group">
+                  <div class="info-item">
+                    <i class="far fa-user"></i>
+                    <span>{{ project.manager }}</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="far fa-calendar"></i>
+                    <span>{{ project.start_date|date:"Y년 m월 d일" }} ~ {{ project.end_date|date:"Y년 m월 d일" }}</span>
+                  </div>
+                </div>
+                <div class="list-item-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ project.progress|default:0 }}%"></div>
+                  </div>
+                  <span class="progress-text">{{ project.progress|default:0 }}%</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          {% empty %}
+          <div class="empty-state">
+            <i class="fas fa-list-ul"></i>
+            <h3>프로젝트가 없습니다</h3>
+            <p>새 프로젝트를 생성하여 작업을 시작해보세요</p>
+            <button class="notion-btn primary" onclick="window.location.href='{% url 'project-create' %}'">
+              <i class="fas fa-plus"></i> 프로젝트 생성
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 스크립트 -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<!-- Gantt 라이브러리 직접 로드 (base.html에 추가했더라도 이중으로 로드해도 괜찮음) -->
+<script src="https://cdn.jsdelivr.net/npm/frappe-gantt/dist/frappe-gantt.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 탭 전환
+  const tabs = document.querySelectorAll('.top-menu-item');
+  const views = document.querySelectorAll('.notion-view');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      tabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      const viewId = this.dataset.view + '-view';
+      views.forEach(v => {
+        v.id === viewId
+          ? v.classList.add('active-view')
+          : v.classList.remove('active-view');
+      });
+      if (this.dataset.view === 'timeline') renderGantt();
+    });
+  });
+
+  // 초기 탭이 timeline이면 렌더
+  if (document.querySelector('.top-menu-item.active').dataset.view === 'timeline') {
+    renderGantt();
+  }
+
+  // 카드 개수 업데이트
+  function updateCardCounts() {
+    document.querySelectorAll('.board-column').forEach(col => {
+      const countElem = col.querySelector('.column-count');
+      const cards = col.querySelectorAll('.notion-card').length;
+      if (countElem) countElem.textContent = cards;
+    });
+  }
+  updateCardCounts();
+
+  // 드래그 앤 드롭 및 상태 업데이트
+  const statusMap = {
+    'planned-column': 'planned',
+    'progress-column': 'in_progress',
+    'delayed-column': 'delayed',
+    'completed-column': 'completed'
+  };
+  
+  // 상태별 클래스 이름과 텍스트 매핑 (정확한 CSS 클래스와 텍스트 사용)
+  const statusStyleMap = {
+    'planned': { class: 'planned', text: '계획됨' },
+    'in_progress': { class: 'progress', text: '진행중' }, // 여기서 클래스는 'progress'
+    'delayed': { class: 'delayed', text: '지연' },
+    'completed': { class: 'completed', text: '완료' }
+  };
+  
+  document.querySelectorAll('.column-content').forEach(el => {
+    Sortable.create(el, {
+      group: 'projects',
+      animation: 150,
+      ghostClass: 'card-ghost',
+      onEnd(evt) {
+        if (evt.from !== evt.to) {
+          const id = evt.item.dataset.projectId;
+          const newStatus = statusMap[evt.to.id];
+          const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+          fetch('/update-status/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrf
+            },
+            body: JSON.stringify({ project_id: id, new_status: newStatus })
+          })
+          .then(res => {
+            if (!res.ok) throw new Error();
+            // 상태 업데이트 성공 후 UI 업데이트
+            const tag = evt.item.querySelector('.status-tag');
+            if (tag && newStatus in statusStyleMap) {
+              // 상태에 맞는 정확한 클래스와 텍스트 적용
+              tag.className = 'status-tag ' + statusStyleMap[newStatus].class;
+              tag.textContent = statusStyleMap[newStatus].text;
+            }
+            updateCardCounts();
+          })
+          .catch(() => alert('상태 업데이트 실패'));
+        }
+      }
+    });
+  });
+
+  // 전역 변수로 gantt 인스턴스 저장 (재생성 방지)
+  let ganttInstance = null;
+  
+  // Gantt 렌더링 함수 - 성능 최적화
+  function renderGantt(viewMode = 'Day') {
+    const target = document.getElementById('gantt-target');
+    if (!target || typeof Gantt !== 'function') {
+      console.error('Gantt 차트를 로드할 수 없습니다.');
+      return;
+    }
+    
+    // 이미 인스턴스가 있으면 뷰모드만 변경
+    if (ganttInstance) {
+      try {
+        ganttInstance.change_view_mode(viewMode);
+        return;
+      } catch (e) {
+        console.warn('뷰 모드 변경 실패, 차트 재생성');
+        // 실패하면 인스턴스 재생성
+      }
+    }
+    
+    // 실제 프로젝트 데이터
+    const projectData = [
+      {% for p in projects %}
+      {
+        id: '{{ p.id }}',
+        name: '{{ p.name|escapejs }}',
+        start: '{{ p.start_date|date:"Y-m-d" }}',
+        end: '{{ p.end_date|date:"Y-m-d" }}',
+        progress: {{ p.progress|default:0 }},
+        custom_class: 'gantt-{{ p.status|default:"planned" }}'
+      }{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ];
+    
+    if (projectData.length === 0) {
+      target.innerHTML = `
+        <div class="empty-state" style="text-align: center; padding: 40px;">
+          <i class="fas fa-calendar-alt fa-3x" style="color: #ccc;"></i>
+          <h3 style="margin-top: 15px;">타임라인에 표시할 프로젝트가 없습니다</h3>
+          <button class="notion-btn primary" style="margin-top: 15px;" onclick="window.location.href='{% url 'project-create' %}'">
+            <i class="fas fa-plus"></i> 프로젝트 생성
+          </button>
+        </div>`;
+      return;
+    }
+    
+    target.innerHTML = '';
+    try {
+      ganttInstance = new Gantt('#gantt-target', projectData, {
+        view_mode: viewMode,
+        on_click: function(task) {
+          window.location.href = `/project/${task.id}/`;
+        },
+        custom_popup_html: function(task) {
+          return `
+            <div class="gantt-popup">
+              <b>${task.name}</b><br>
+              기간: ${new Date(task._start).toLocaleDateString()} ~ ${new Date(task._end).toLocaleDateString()}<br>
+              진행률: ${task.progress}%
+            </div>
+          `;
+        }
+      });
+      
+      // 간트 차트 로딩 완료 표시
+      console.log('Gantt 차트 로딩 완료');
+    } catch (e) {
+      console.error('Gantt 차트 생성 오류:', e);
+      target.innerHTML = '<div class="alert alert-danger">차트 로드 실패</div>';
+    }
+  }
+  
+  // Gantt 뷰 버튼 이벤트 등록 (한 번만 실행)
+  document.querySelectorAll('.gantt-view-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.gantt-view-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      renderGantt(this.dataset.view);
+    });
+  });
+  
+  // 타임라인 탭 클릭 시 차트 렌더링 (timeout으로 DOM 렌더링 보장)
+  document.querySelector('.top-menu-item[data-view="timeline"]').addEventListener('click', function() {
+    setTimeout(() => renderGantt('Day'), 100);
+  });
+  
+  // 초기 로드 시 타임라인 탭이 활성화되어 있으면 차트 렌더링
+  if (document.querySelector('.top-menu-item.active')?.dataset.view === 'timeline') {
+    setTimeout(() => renderGantt('Day'), 100);
+  }
+});
+</script>
+
+<style>
+/* Gantt 상태별 색상 커스텀 */
+.gantt .bar-wrapper.gantt-planned .bar { fill: #a3c4f3 !important; } /* 파란 계열 */
+.gantt .bar-wrapper.gantt-in_progress .bar { fill: #fde4a3 !important; } /* 노란 계열 */
+.gantt .bar-wrapper.gantt-delayed .bar { fill: #f4a2a3 !important; } /* 빨간 계열 */
+.gantt .bar-wrapper.gantt-completed .bar { fill: #a8e6cf !important; } /* 녹색 계열 */
+
+/* 진행률 바 색상 */
+.gantt .bar-wrapper .bar-progress { fill: rgba(0, 0, 0, 0.25) !important; }
+
+/* 팝업 스타일 */
+.gantt-container .popup-wrapper {
+  background: #fff;
+  border: 1px solid #eee;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  padding: 0; /* 내부 div에서 패딩 처리 */
+}
+.gantt-popup {
+  padding: 10px 15px;
+  font-size: 13px;
+  color: #333;
+  line-height: 1.6;
+}
+.gantt-popup b {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+/* Gantt 차트 컨테이너 높이 등 조정 */
+#gantt-target .gantt .grid-body {
+  min-height: 300px; /* 프로젝트가 적을 때 최소 높이 */
+}
+
+/* Gantt 차트 상태별 색상 커스텀 (간소화) */
+.gantt-container {
+  width: 100%;
+  height: 100%;
+}
+.gantt .bar { fill: #a3c4f3 !important; }
+.gantt .bar-progress { fill: rgba(0,0,0,0.2) !important; }
+
+/* Gantt 컨트롤 스타일 */
+.gantt-controls {
+  display: flex;
+  justify-content: flex-end;
+}
+.btn-group {
+  display: inline-flex;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.gantt-view-btn {
+  background: #f5f5f5;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  border-right: 1px solid #ddd;
+}
+.gantt-view-btn:last-child {
+  border-right: none;
+}
+.gantt-view-btn.active {
+  background: #4a69bd;
+  color: white;
+}
+.gantt-view-btn:hover:not(.active) {
+  background: #e8e8e8;
+}
+
+/* 오늘 날짜 하이라이트 색상 수정 */
+.gantt .today-highlight {
+  fill: rgba(82, 157, 255, 0.2) !important; /* 빨간색 계열 반투명 */
+}
+</style>
+{% endblock %}

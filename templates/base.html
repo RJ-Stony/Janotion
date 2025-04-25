@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Janotion</title>
+    
+    <!-- Google Fonts - Inter (Notion과 유사한 폰트) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- 기존 스타일시트 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/css/style.css" />
+    
+    <!-- Gantt 차트 라이브러리 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/frappe-gantt/dist/frappe-gantt.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/frappe-gantt/dist/frappe-gantt.min.js"></script>
+    
+    <!-- 글꼴 및 기본 스타일 -->
+    <style>
+      :root {
+        /* Notion 스타일 색상 변수 */
+        --notion-black: #37352f;
+        --notion-gray: #9b9a97;
+        --notion-light-gray: #e9e9e8;
+        --notion-white: #ffffff;
+        --notion-blue: #2381fe;
+        --notion-bg: #ffffff;
+        --notion-text: #37352f;
+      }
+      
+      /* 전역 글꼴 설정 */
+      html, body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--notion-text);
+        background-color: var(--notion-bg);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      /* 헤딩 스타일 */
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        font-weight: 600;
+        color: var(--notion-black);
+        letter-spacing: -0.01em;
+      }
+      
+      /* 글꼴 가중치 조정 */
+      .font-medium {
+        font-weight: 500;
+      }
+      
+      .font-semibold {
+        font-weight: 600;
+      }
+      
+      .font-bold {
+        font-weight: 700;
+      }
+      
+      /* Notion 스타일 텍스트 */
+      p, li, td, th, input, textarea, select, button {
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      
+      /* 작은 텍스트 */
+      .text-sm {
+        font-size: 14px;
+      }
+      
+      /* 더 작은 텍스트 */
+      .text-xs {
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="notion-layout">
+      <!-- 사이드바 네비게이션 -->
+      <div class="notion-sidebar">
+        <div class="sidebar-header">
+          <a href="{% url 'dashboard' %}" class="sidebar-logo">Janotion</a>
+        </div>
+        
+        <div class="sidebar-section">
+          <div class="sidebar-link {% if request.path == '/' %}active{% endif %}">
+            <a href="{% url 'dashboard' %}">
+              <i class="fas fa-home"></i>
+              <span>WBS</span>
+            </a>
+          </div>
+          <div class="sidebar-link">
+            <a href="{% url 'project-create' %}">
+              <i class="fas fa-plus-circle"></i>
+              <span>프로젝트 생성</span>
+            </a>
+          </div>
+        </div>
+        
+        <div class="sidebar-section">
+          <div class="sidebar-title">워크스페이스</div>
+          <div class="sidebar-pages">
+            <div class="add-page">
+              <i class="fas fa-plus"></i>
+              <span>새 페이지</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          {% if user.is_authenticated %}
+            <div class="user-info">
+              <i class="fas fa-user-circle"></i>
+              <span>{{ user.username }}</span>
+            </div>
+            <a href="{% url 'logout' %}" class="logout-link">
+              <i class="fas fa-sign-out-alt"></i>
+            </a>
+          {% else %}
+            <a href="{% url 'login' %}" class="login-link">
+              <i class="fas fa-sign-in-alt"></i>
+              <span>로그인</span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      
+      <!-- 메인 컨텐츠 영역 -->
+      <div class="notion-main">
+        <!-- 상단 미니 내비게이션 -->
+        <div class="notion-topbar">
+          <div class="topbar-left">
+            <button class="menu-toggle">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="breadcrumb">
+              <span>{% if request.path == '/' %}WBS{% else %}{{ request.resolver_match.url_name|title }}{% endif %}</span>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <div class="topbar-actions">
+              <button class="topbar-action">
+                <i class="fas fa-search"></i>
+              </button>
+              <button class="topbar-action">
+                <i class="fas fa-bell"></i>
+              </button>
+              <button class="topbar-action">
+                <i class="fas fa-ellipsis-h"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 메시지 알림 -->
+        {% if messages %}
+        <div class="notion-messages">
+          {% for message in messages %}
+          <div class="notion-message {{ message.tags }}">
+            {{ message }}
+            <button class="message-close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- 콘텐츠 영역 -->
+        <div class="notion-content">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/main.js"></script>
+    
+    <script>
+    // 사이드바 토글
+    document.querySelector('.menu-toggle').addEventListener('click', function() {
+      document.querySelector('.notion-layout').classList.toggle('sidebar-collapsed');
+    });
+    
+    // 메시지 닫기
+    document.querySelectorAll('.message-close').forEach(button => {
+      button.addEventListener('click', function() {
+        this.closest('.notion-message').style.display = 'none';
+      });
+    });
+    </script>
+  </body>
+</html>

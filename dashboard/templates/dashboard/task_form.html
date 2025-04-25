@@ -1,0 +1,189 @@
+{% extends 'base.html' %} {% block content %}
+<div class="notion-form-container">
+  <div class="notion-form-header">
+    <div class="page-icon">
+      <i class="fas fa-tasks"></i>
+    </div>
+    <h1 class="form-title">
+      {% if form.instance.pk %}작업 수정{% else %}새 작업 생성{% endif %}
+    </h1>
+  </div>
+
+  <form method="post" class="notion-form">
+    {% csrf_token %}
+
+    <div class="notion-form-section">
+      <div class="notion-form-group">
+        <label for="{{ form.name.id_for_label }}" class="notion-form-label">작업 이름</label>
+        <div class="notion-input-wrapper">
+          {{ form.name }}
+          {% if form.name.errors %}
+          <div class="notion-form-error">{{ form.name.errors }}</div>
+          {% endif %}
+        </div>
+      </div>
+      
+      <!-- 프로젝트가 이미 지정된 경우 숨김 처리 -->
+      {% if not project %}
+      <div class="notion-form-group">
+        <label for="{{ form.project.id_for_label }}" class="notion-form-label">프로젝트</label>
+        <div class="notion-select-wrapper">
+          {{ form.project }}
+          {% if form.project.errors %}
+          <div class="notion-form-error">{{ form.project.errors }}</div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="notion-form-group">
+        <label for="{{ form.assignee.id_for_label }}" class="notion-form-label">담당자</label>
+        <div class="notion-input-wrapper">
+          {{ form.assignee }}
+          {% if form.assignee.errors %}
+          <div class="notion-form-error">{{ form.assignee.errors }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="notion-form-row">
+        <div class="notion-form-col">
+          <div class="notion-form-group">
+            <label for="{{ form.start_date.id_for_label }}" class="notion-form-label">시작일</label>
+            <div class="notion-input-wrapper date-input">
+              <i class="far fa-calendar"></i>
+              {{ form.start_date }}
+              {% if form.start_date.errors %}
+              <div class="notion-form-error">{{ form.start_date.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="notion-form-col">
+          <div class="notion-form-group">
+            <label for="{{ form.end_date.id_for_label }}" class="notion-form-label">종료일</label>
+            <div class="notion-input-wrapper date-input">
+              <i class="far fa-calendar"></i>
+              {{ form.end_date }}
+              {% if form.end_date.errors %}
+              <div class="notion-form-error">{{ form.end_date.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="notion-form-group">
+        <label for="{{ form.status.id_for_label }}" class="notion-form-label">상태</label>
+        <div class="notion-select-wrapper">
+          {{ form.status }}
+          {% if form.status.errors %}
+          <div class="notion-form-error">{{ form.status.errors }}</div>
+          {% endif %}
+        </div>
+      </div>
+      
+      <div class="notion-form-group">
+        <label for="{{ form.progress.id_for_label }}" class="notion-form-label">진행률 (%)</label>
+        <div class="notion-input-wrapper">
+          {{ form.progress }}
+          {% if form.progress.errors %}
+          <div class="notion-form-error">{{ form.progress.errors }}</div>
+          {% endif %}
+          <div class="progress-preview">
+            <div class="progress-bar-preview">
+              <div class="progress-fill-preview" style="width: 0%"></div>
+            </div>
+            <span class="progress-text-preview">0%</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="notion-form-group">
+        <label for="{{ form.description.id_for_label }}" class="notion-form-label">설명</label>
+        <div class="notion-input-wrapper">
+          {{ form.description }}
+          {% if form.description.errors %}
+          <div class="notion-form-error">{{ form.description.errors }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="notion-form-actions">
+      <a href="{% if project %}{% url 'project-detail' project.id %}{% else %}{% url 'dashboard' %}{% endif %}" class="notion-button">취소</a>
+      <button type="submit" class="notion-button primary">저장</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 입력 필드에 포커스 시 효과 추가
+    const inputFields = document.querySelectorAll('.notion-form input, .notion-form select, .notion-form textarea');
+    
+    inputFields.forEach(input => {
+      // 기존 스타일을 Notion 스타일로 덮어쓰기
+      input.classList.add('notion-input');
+      
+      input.addEventListener('focus', function() {
+        this.closest('.notion-input-wrapper')?.classList.add('focused');
+      });
+      
+      input.addEventListener('blur', function() {
+        this.closest('.notion-input-wrapper')?.classList.remove('focused');
+      });
+    });
+    
+    // 진행률 값 변경 시 프로그레스 바 업데이트
+    const progressInput = document.getElementById('{{ form.progress.id_for_label }}');
+    const progressFill = document.querySelector('.progress-fill-preview');
+    const progressText = document.querySelector('.progress-text-preview');
+    
+    if (progressInput) {
+      // 초기값 설정
+      const initialValue = progressInput.value || 0;
+      progressFill.style.width = initialValue + '%';
+      progressText.textContent = initialValue + '%';
+      
+      // 값 변경 시 업데이트
+      progressInput.addEventListener('input', function() {
+        const value = this.value || 0;
+        progressFill.style.width = value + '%';
+        progressText.textContent = value + '%';
+      });
+    }
+  });
+</script>
+
+<style>
+  .progress-preview {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 0 12px 12px;
+  }
+  
+  .progress-bar-preview {
+    flex: 1;
+    height: 6px;
+    background-color: #ebeaea;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  
+  .progress-fill-preview {
+    height: 100%;
+    background-color: #2eaadc;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  
+  .progress-text-preview {
+    font-size: 12px;
+    color: #9b9a97;
+  }
+</style>
+{% endblock %}

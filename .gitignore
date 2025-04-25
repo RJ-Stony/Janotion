@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pyo
+*.pyd
+*.py.class
+
+# Django
+media/
+staticfiles/
+.env
+.env.*
+*.log
+.prettierignore
+.prettierrc
+venv/
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test/coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+test-results/
+
+# Migrations (optional: keep if you want to version control migrations)
+# **/migrations/
+# !**/migrations/__init__.py
+
+# Jupyter
+.ipynb_checkpoints
+
+# mypy
+.mypy_cache/
+.dmypy.json
+.pyre/

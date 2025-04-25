@@ -1,0 +1,1080 @@
+{% extends 'base.html' %} {% block content %}
+<div class="notion-detail-page">
+  <!-- 프로젝트 헤더 -->
+  <div class="notion-page-header">
+    <div class="page-icon">
+      <i class="fas fa-clipboard-list"></i>
+    </div>
+    <h1 class="page-title">{{ project.name }}</h1>
+    <div class="page-controls">
+      <button class="page-control-btn" title="공유">
+        <i class="fas fa-share"></i>
+      </button>
+      <button class="page-control-btn" title="더 보기">
+        <i class="fas fa-ellipsis-h"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 프로젝트 정보 -->
+  <div class="notion-property-section">
+    <div class="properties-grid">
+      <div class="property-item">
+        <div class="property-name">담당자</div>
+        <div class="property-value">
+          <div class="user-pill">
+            <i class="fas fa-user"></i>
+            <span>{{ project.manager }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-item">
+        <div class="property-name">시작일</div>
+        <div class="property-value">
+          <div class="date-pill">
+            <i class="far fa-calendar"></i>
+            <span>{{ project.start_date|date:"Y-m-d" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-item">
+        <div class="property-name">종료일</div>
+        <div class="property-value">
+          <div class="date-pill">
+            <i class="far fa-calendar-check"></i>
+            <span>{{ project.end_date|date:"Y-m-d" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-item">
+        <div class="property-name">상태</div>
+        <div class="property-value">
+          <div
+            class="status-pill status-{{ project.status|default:'planned' }}"
+          >
+            <span>
+              {% if project.status == 'completed' %}완료됨 {% elif project.status == 'in_progress' %}진행 중 
+              {% elif project.status == 'delayed' %}지연됨 {% else %}계획됨{% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-item full-width">
+        <div class="property-name">진행률</div>
+        <div class="property-value">
+          <div class="progress-wrapper">
+            <div class="progress-bar-outer">
+              <div
+                class="progress-bar-inner"
+                style="width: {{ project.progress|default:0 }}%"
+              ></div>
+            </div>
+            <span class="progress-text">{{ project.progress|default:0 }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 작업 관리 툴바 -->
+  <div class="notion-toolbar">
+    <div class="toolbar-left">
+      <h2 class="section-title"><i class="fas fa-tasks"></i> 작업 목록</h2>
+    </div>
+    <div class="toolbar-right">
+      <a
+        href="{% url 'task-create' project.id %}"
+        class="notion-button primary"
+      >
+        <i class="fas fa-plus"></i> 작업 추가
+      </a>
+      <a href="{% url 'project-update' project.id %}" class="notion-button">
+        <i class="fas fa-edit"></i> 프로젝트 수정
+      </a>
+    </div>
+  </div>
+
+  <!-- 작업 상태 필터 -->
+  <div class="notion-tabs">
+    <button class="notion-tab active" data-filter="all">전체</button>
+    <button class="notion-tab" data-filter="in_progress">진행 중</button>
+    <button class="notion-tab" data-filter="planned">계획됨</button>
+    <button class="notion-tab" data-filter="completed">완료됨</button>
+    <button class="notion-tab" data-filter="delayed">지연됨</button>
+  </div>
+
+  <!-- 작업 테이블 -->
+  <div class="notion-table-wrapper">
+    <table class="notion-table">
+      <thead>
+        <tr>
+          <th class="checkbox-column"></th>
+          <th>작업명</th>
+          <th>담당자</th>
+          <th>기간</th>
+          <th>진행률</th>
+          <th>상태</th>
+          <th>작업</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %}
+        <tr
+          class="notion-row"
+          data-status="{{ task.status|default:'planned' }}"
+        >
+          <td>
+            <div class="notion-checkbox">
+              <input type="checkbox" id="task-{{ task.id }}" {% if task.status == 'completed' %}checked{% endif %} class="task-checkbox"
+              data-task-id="{{ task.id }}">
+              <label for="task-{{ task.id }}"></label>
+            </div>
+          </td>
+          <td>
+            <div class="task-name-cell">
+              <span class="task-name">{{ task.name }}</span>
+              {% if task.description %}
+              <div class="task-description">
+                {{ task.description|truncatewords:20 }}
+              </div>
+              {% endif %}
+            </div>
+          </td>
+          <td>
+            <div class="user-pill small">
+              <i class="fas fa-user"></i>
+              <span>{{ task.assignee }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="date-range">
+              {{ task.start_date|date:"m/d" }} - {{ task.end_date|date:"m/d" }}
+            </div>
+          </td>
+          <td>
+            <div class="progress-wrapper small">
+              <div class="progress-bar-outer">
+                <div
+                  class="progress-bar-inner"
+                  style="width: {{ task.progress }}%"
+                ></div>
+              </div>
+              <span class="progress-text">{{ task.progress }}%</span>
+            </div>
+          </td>
+          <td>
+            <div
+              class="status-pill status-{{ task.status|default:'planned' }} small"
+            >
+              {% if task.status == 'completed' %}완료 {% elif task.status == 'in_progress' %}진행 중 {% elif task.status == 'delayed' %}지연 
+              {% else %}계획됨{% endif %}
+            </div>
+          </td>
+          <td>
+            <div class="row-actions">
+              <a
+                href="{% url 'task-update' task.id %}"
+                class="action-button"
+                title="편집"
+              >
+                <i class="fas fa-pencil-alt"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% if task.subtasks.exists %} {% for subtask in task.subtasks.all %}
+        <tr
+          class="notion-row subtask-row"
+          data-status="{{ subtask.status|default:'planned' }}"
+          data-parent="{{ task.id }}"
+        >
+          <td>
+            <div class="notion-checkbox">
+              <input type="checkbox" id="task-{{ subtask.id }}" 
+              {% if subtask.status == 'completed' %}checked{% endif %}
+              class="task-checkbox" data-task-id="{{ subtask.id }}">
+              <label for="task-{{ subtask.id }}"></label>
+            </div>
+          </td>
+          <td>
+            <div class="task-name-cell">
+              <span class="subtask-indicator">└</span>
+              <span class="task-name">{{ subtask.name }}</span>
+              {% if subtask.description %}
+              <div class="task-description">
+                {{ subtask.description|truncatewords:20 }}
+              </div>
+              {% endif %}
+            </div>
+          </td>
+          <td>
+            <div class="user-pill small">
+              <i class="fas fa-user"></i>
+              <span>{{ subtask.assignee }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="date-range">
+              {{ subtask.start_date|date:"m/d" }} - {{ subtask.end_date|date:"m/d" }}
+            </div>
+          </td>
+          <td>
+            <div class="progress-wrapper small">
+              <div class="progress-bar-outer">
+                <div
+                  class="progress-bar-inner"
+                  style="width: {{ subtask.progress }}%"
+                ></div>
+              </div>
+              <span class="progress-text">{{ subtask.progress }}%</span>
+            </div>
+          </td>
+          <td>
+            <div
+              class="status-pill status-{{ subtask.status|default:'planned' }} small"
+            >
+              {% if subtask.status == 'completed' %}완료 
+              {% elif subtask.status == 'in_progress' %}진행 중 
+              {% elif subtask.status == 'delayed' %}지연 {% else %}계획됨{% endif %}
+            </div>
+          </td>
+          <td>
+            <div class="row-actions">
+              <a
+                href="{% url 'task-update' subtask.id %}"
+                class="action-button"
+                title="편집"
+              >
+                <i class="fas fa-pencil-alt"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %} {% endif %} {% empty %}
+        <tr>
+          <td colspan="7">
+            <div class="empty-state">
+              <div class="empty-icon-container">
+                <div class="empty-icon">
+                  <i class="fas fa-clipboard-check"></i>
+                </div>
+                <div class="empty-icon-shadow"></div>
+              </div>
+              <h3>이 프로젝트에는 작업이 없어요</h3>
+              <p>첫 번째 작업을 추가해서 프로젝트를 시작해보세요!</p>
+              <a
+                href="{% url 'task-create' project.id %}"
+                class="notion-button primary empty-button"
+              >
+                <div class="button-content">
+                  <i class="fas fa-plus"></i>
+                  <span>작업 추가하기</span>
+                </div>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 새 작업 추가 -->
+  <div class="notion-add-row-wrapper">
+    <button
+      class="notion-add-row"
+      onclick="window.location.href='{% url 'task-create' project.id %}'"
+    >
+      <i class="fas fa-plus"></i> 새 작업
+    </button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // 필터 탭 기능
+    const filterTabs = document.querySelectorAll(".notion-tab");
+    const rows = document.querySelectorAll(".notion-row");
+
+    filterTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        // 탭 활성화
+        filterTabs.forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+
+        const filter = tab.dataset.filter;
+
+        // 행 필터링
+        rows.forEach((row) => {
+          if (filter === "all" || row.dataset.status === filter) {
+            row.style.display = "";
+
+            // 하위 작업 처리
+            if (row.classList.contains("subtask-row")) {
+              const parentId = row.dataset.parent;
+              const parentRow = document.querySelector(
+                `.notion-row[data-task-id="${parentId}"]`
+              );
+              if (parentRow.style.display === "none") {
+                row.style.display = "none";
+              }
+            }
+          } else {
+            row.style.display = "none";
+          }
+        });
+      });
+    });
+
+    // 체크박스 상태 변경 애니메이션
+    const checkboxes = document.querySelectorAll(".task-checkbox");
+    checkboxes.forEach((checkbox) => {
+      checkbox.addEventListener("change", function () {
+        const row = this.closest(".notion-row");
+
+        if (this.checked) {
+          row.classList.add("completed");
+        } else {
+          row.classList.remove("completed");
+        }
+
+        // 여기에 AJAX로 상태 변경 요청을 추가할 수 있습니다
+        // const taskId = this.dataset.taskId;
+        // const status = this.checked ? 'completed' : 'planned';
+
+        // fetch(`/api/tasks/${taskId}/status/`, {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //     'X-CSRFToken': getCookie('csrftoken')
+        //   },
+        //   body: JSON.stringify({ status: status })
+        // });
+      });
+    });
+
+    // 행에 호버 효과
+    rows.forEach((row) => {
+      row.addEventListener("mouseenter", () => {
+        row.classList.add("hover");
+      });
+
+      row.addEventListener("mouseleave", () => {
+        row.classList.remove("hover");
+      });
+    });
+  });
+</script>
+
+<style>
+  /* 노션 스타일 페이지 상세 CSS */
+  .notion-detail-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  .notion-page-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eaecef;
+  }
+
+  .page-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 10px;
+    background-color: #4a69bd; /* 네이비 계열 색상 적용 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    color: white;
+    font-size: 24px;
+    box-shadow: 0 4px 8px rgba(74, 105, 189, 0.15);
+    transition: all 0.2s ease;
+  }
+  
+  .page-icon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(74, 105, 189, 0.2);
+  }
+
+  .page-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #37352f;
+    margin: 0;
+    flex: 1;
+    line-height: 1.2;
+  }
+
+  .page-controls {
+    display: flex;
+    gap: 8px;
+  }
+
+  .page-control-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #606060;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .page-control-btn:hover {
+    background-color: #f1f1f0;
+    color: #4a69bd; /* 네이비 색상으로 변경 */
+    transform: translateY(-1px);
+  }
+
+  /* 프로퍼티 섹션 스타일 */
+  .notion-property-section {
+    border: 1px solid #e0e0df;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 40px;
+    background-color: #fbfbfa;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .notion-property-section:hover {
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  }
+
+  .properties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .property-item {
+    padding: 8px 0;
+  }
+
+  .property-item.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .property-name {
+    font-size: 12px;
+    color: #606060;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .property-value {
+    font-size: 14px;
+    color: #37352f;
+  }
+
+  /* 상태 알약 스타일 */
+  .user-pill,
+  .date-pill,
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #f1f1f0;
+    max-width: 100%;
+    transition: all 0.2s ease;
+  }
+
+  .user-pill:hover,
+  .date-pill:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .user-pill i,
+  .date-pill i {
+    margin-right: 6px;
+    color: #4a69bd; /* 네이비 색상으로 변경 */
+  }
+
+  .user-pill.small,
+  .date-pill.small,
+  .status-pill.small {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+  .status-pill {
+    font-weight: 500;
+  }
+
+  .status-pill.status-completed {
+    background-color: rgba(15, 123, 108, 0.12);
+    color: #0f7b6c;
+  }
+
+  .status-pill.status-in_progress {
+    background-color: rgba(74, 105, 189, 0.12); /* 네이비 계열 */
+    color: #4a69bd; /* 네이비 계열 색상 */
+  }
+
+  .status-pill.status-delayed {
+    background-color: rgba(224, 62, 62, 0.12);
+    color: #e03e3e;
+  }
+
+  .status-pill.status-planned {
+    background-color: rgba(46, 170, 220, 0.12);
+    color: #2eaadc;
+  }
+
+  /* 프로그레스 바 스타일 */
+  .progress-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .progress-bar-outer {
+    flex: 1;
+    height: 10px;
+    background-color: #e8ecf1; /* 밝은 네이비 배경 */
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  }
+
+  .progress-wrapper.small .progress-bar-outer {
+    height: 6px;
+  }
+
+  .progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(to right, #4a69bd, #6a89cc); /* 그라디언트 효과 */
+    border-radius: 6px;
+    transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* 부드러운 애니메이션 */
+  }
+
+  .progress-text {
+    font-size: 12px;
+    color: #4a69bd;
+    min-width: 40px;
+    text-align: right;
+    font-weight: 600;
+  }
+
+  /* 툴바 스타일 */
+  .notion-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed #e0e0df;
+  }
+
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+  }
+
+  .toolbar-right {
+    display: flex;
+    gap: 10px;
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    color: #37352f;
+    display: flex;
+    align-items: center;
+  }
+
+  .section-title i {
+    margin-right: 10px;
+    color: #4a69bd; /* 네이비 계열 색상 */
+    font-size: 18px;
+  }
+
+  /* 버튼 스타일 */
+  .notion-button {
+    display: inline-flex;
+    text-align: center;  
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #f1f1f0;
+    color: #37352f;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+
+  .notion-button:hover {
+    background-color: #e0e0df;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  }
+
+  .notion-button.primary {
+    background-color: #4a69bd; /* 네이비 계열 색상 */
+    color: white;
+  }
+
+  .notion-button.primary:hover {
+    background-color: #5a79cd; /* 약간 더 밝은 네이비 */
+    box-shadow: 0 4px 8px rgba(74, 105, 189, 0.3);
+  }
+
+  .notion-button i {
+    margin-right: 6px;
+  }
+
+  /* 탭 스타일 */
+  .notion-tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 24px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .notion-tab {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    background: transparent;
+    border: none;
+    color: #606060;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+  }
+
+  .notion-tab:hover {
+    background-color: rgba(74, 105, 189, 0.08); /* 약한 네이비 배경 */
+    color: #4a69bd;
+  }
+
+  .notion-tab.active {
+    background-color: #4a69bd; /* 네이비 색상 */
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(74, 105, 189, 0.2);
+  }
+
+  /* 테이블 스타일 */
+  .notion-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #e0e0df;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .notion-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .notion-table th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #606060;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0df;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .notion-table th:first-child {
+    border-top-left-radius: 10px;
+  }
+
+  .notion-table th:last-child {
+    border-top-right-radius: 10px;
+  }
+
+  .notion-table td {
+    padding: 12px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #e0e0df;
+    vertical-align: top;
+    transition: background-color 0.2s ease;
+  }
+
+  .checkbox-column {
+    width: 40px;
+  }
+
+  .notion-row {
+    transition: all 0.2s ease;
+  }
+
+  .notion-row:hover,
+  .notion-row.hover {
+    background-color: #f9f9f8;
+  }
+
+  .notion-row.completed {
+    background-color: #fbfbfa;
+  }
+
+  .notion-row.completed .task-name {
+    text-decoration: line-through;
+    color: #606060;
+  }
+
+  .subtask-row {
+    background-color: #fbfbfa;
+  }
+
+  .subtask-indicator {
+    color: #606060;
+    margin-right: 8px;
+  }
+
+  /* 체크박스 스타일 */
+  .notion-checkbox {
+    position: relative;
+    width: 20px;
+    height: 20px;
+  }
+
+  .notion-checkbox input[type="checkbox"] {
+    opacity: 0;
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  .notion-checkbox label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #e0e0df;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .notion-checkbox input[type="checkbox"]:checked + label {
+    background-color: #2eaadc;
+    border-color: #2eaadc;
+  }
+
+  .notion-checkbox input[type="checkbox"]:checked + label:after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 5px;
+    width: 3px;
+    height: 7px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  /* 작업 이름 셀 스타일 */
+  .task-name-cell {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .task-name {
+    font-weight: 500;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+  }
+
+  .task-description {
+    font-size: 12px;
+    color: #606060;
+    margin-top: 4px;
+  }
+
+  /* 날짜 범위 스타일 */
+  .date-range {
+    font-size: 13px;
+    color: #606060;
+  }
+
+  /* 작업 액션 버튼 스타일 */
+  .row-actions {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    display: flex;
+    gap: 4px;
+  }
+
+  .notion-row:hover .row-actions {
+    opacity: 1;
+  }
+
+  .action-button {
+    width: 24px;
+    height: 24px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #606060;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .action-button:hover {
+    background-color: #e0e0df;
+    color: #37352f;
+  }
+
+  /* 행 추가 버튼 */
+  .notion-add-row-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .notion-add-row {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    background: transparent;
+    border: 1px dashed #d4d4d4;
+    color: #606060;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .notion-add-row:hover {
+    background-color: #f1f1f0;
+    border-color: #b0b0b0;
+    color: #37352f;
+  }
+
+  .notion-add-row i {
+    margin-right: 6px;
+  }
+
+  /* 빈 상태 메시지 */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), #f8fafc);
+    border-radius: 10px;
+  }
+
+  .empty-icon-container {
+    position: relative;
+    margin-bottom: 28px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .empty-icon {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background-color: #4f80fc; /* 이미지와 맞는 파란색 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: white;
+    box-shadow: 0 10px 20px rgba(79, 128, 252, 0.25);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .empty-icon i {
+    margin-left: 0; /* 아이콘 정확히 중앙에 위치 */
+    margin-top: 0;
+  }
+  
+  .empty-icon-shadow {
+    position: absolute;
+    bottom: -10px;
+    width: 84px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(79, 128, 252, 0.15);
+    filter: blur(10px);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .empty-state:hover .empty-icon {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 16px rgba(74, 105, 189, 0.35);
+  }
+
+  .empty-state:hover .empty-icon-shadow {
+    transform: scale(1.1);
+  }
+
+  .empty-state h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: #333;
+  }
+
+  .empty-state p {
+    font-size: 16px;
+    color: #666;
+    margin: 0 0 28px;
+    max-width: 320px;
+    line-height: 1.5;
+  }
+
+  /* 버튼 내부 요소 정렬 개선 */
+  .empty-button {
+    padding: 0; /* 패딩 초기화 */
+    font-size: 15px;
+    border-radius: 8px;
+    min-width: 140px;
+    height: 42px;
+  }
+  
+  .button-content {
+    width: 100%;
+    height: 100%;
+    padding: 10px 0;
+  }
+  
+  .button-content i {
+    font-size: 14px;
+    margin-right: 8px;
+    display: inline-flex; /* 인라인 플렉스로 변경 */
+    align-items: center;
+  }
+  
+  .button-content span {
+    font-weight: 500;
+    display: inline-flex; /* 인라인 플렉스로 변경 */
+    align-items: center;
+  }
+  
+  .empty-button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(79, 128, 252, 0.3);
+  }
+
+  /* 작업이 없을 때 테이블 전체 스타일 */
+  .notion-table:has(.empty-state) {
+    background-color: #fafbfc;
+  }
+
+  /* 애니메이션 효과 */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .notion-detail-page {
+    animation: fadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .notion-page-header {
+    animation: slideDown 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .notion-property-section {
+    animation: fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .notion-table-wrapper {
+    animation: slideUp 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* 반응형 조정 */
+  @media (max-width: 768px) {
+    .notion-detail-page {
+      padding: 16px;
+    }
+
+    .properties-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .page-title {
+      font-size: 28px;
+    }
+
+    .notion-toolbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .toolbar-right {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .notion-tabs {
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+    }
+  }
+</style>
+{% endblock %}

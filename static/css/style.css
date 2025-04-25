@@ -1,0 +1,1886 @@
+/* Notion 스타일 CSS */
+:root {
+  --notion-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+    "Apple Color Emoji", Arial, sans-serif;
+  --notion-bg: #ffffff;
+  --notion-text: #37352f;
+  --notion-gray: #e9e9e8;
+  --notion-gray-text: #9b9a97;
+  --notion-red: #e03e3e;
+  --notion-orange: #d9730d;
+  --notion-yellow: #dfab01;
+  --notion-green: #0f7b6c;
+  --notion-blue: #0b6e99;
+  --notion-purple: #6940a5;
+  --notion-pink: #ad1a72;
+  --notion-sidebar-bg: #fbfafa;
+  --notion-border: rgba(55, 53, 47, 0.09);
+  --notion-hover-bg: rgba(55, 53, 47, 0.08);
+  --card-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px,
+    rgba(15, 15, 15, 0.1) 0px 2px 4px;
+  --card-hover-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px,
+    rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.1) 0px 9px 24px;
+  --notion-accent: #2b6cb0; /* 짙은 파란색으로 변경 */
+  --notion-accent-hover: #1e4e8c; /* 호버 시 더 진한 파란색 */
+}
+
+/* 노션 스타일 글꼴 설정 */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* 기본 글꼴 설정 */
+html,
+body,
+div,
+span,
+p,
+a,
+li,
+ul,
+ol,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+input,
+select,
+textarea {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+/* 기본 스타일 */
+body {
+  font-family: var(--notion-font);
+  color: var(--notion-text);
+  margin: 0;
+  padding: 0;
+  background: var(--notion-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 컨테이너 스타일 */
+.notion-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* 사이드바 스타일 */
+.sidebar {
+  width: 240px;
+  background: var(--notion-sidebar-bg);
+  height: 100%;
+  border-right: 1px solid var(--notion-border);
+  padding: 10px 0;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+}
+
+.sidebar-header h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--notion-gray-text);
+  margin: 0;
+}
+
+.btn-add-page {
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--notion-gray-text);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-add-page:hover {
+  background: var(--notion-hover-bg);
+  color: var(--notion-text);
+}
+
+.sidebar-items {
+  padding: 0 8px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 3px;
+  margin-bottom: 1px;
+  cursor: pointer;
+  color: var(--notion-text);
+  transition: background 0.2s;
+}
+
+.sidebar-item:hover {
+  background: var(--notion-hover-bg);
+}
+
+.sidebar-item.active {
+  background: var(--notion-hover-bg);
+  font-weight: 500;
+}
+
+.sidebar-item i {
+  width: 18px;
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+/* 메인 콘텐츠 영역 */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  padding: 0;
+  background-color: #ffffff; /* 회색에서 흰색으로 변경 */
+}
+
+/* 상단 네비게이션 메뉴 (이미지처럼) */
+.notion-top-menu {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+  background-color: #fff;
+  height: 45px;
+  gap: 8px;
+}
+
+.top-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 14px;
+  color: #37352f;
+  cursor: pointer;
+}
+
+.top-menu-item.active {
+  background-color: rgba(55, 53, 47, 0.08);
+  font-weight: 500;
+}
+
+.top-menu-item i {
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+/* 상단 네비게이션 메뉴 (한글 스타일) */
+.notion-top-menu {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+  background-color: #fff;
+  height: 45px;
+  gap: 8px;
+}
+
+.top-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 14px;
+  color: #37352f;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.top-menu-item:hover {
+  background-color: rgba(55, 53, 47, 0.08);
+}
+
+.top-menu-item.active {
+  background-color: rgba(55, 53, 47, 0.08);
+  font-weight: 500;
+}
+
+.top-menu-item i {
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+/* 프로젝트 헤더 */
+.projects-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+}
+
+.projects-title {
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.projects-title i {
+  color: rgb(110, 54, 48);
+}
+
+/* 칸반 보드 컨테이너 */
+.board-container {
+  overflow-x: auto;
+  padding: 0 14px;
+  flex-grow: 1;
+}
+
+/* 보드 레이아웃 */
+.board-columns {
+  display: flex;
+  gap: 14px;
+  padding-bottom: 20px;
+  min-height: 200px;
+}
+
+/* 컬럼 스타일 */
+.board-column {
+  min-width: 260px;
+  width: 260px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 컬럼 헤더 */
+.column-header {
+  padding: 8px 10px 8px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  border-bottom: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+/* 컬럼 이름 */
+.column-name {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(75, 71, 67);
+}
+
+/* 상태 인디케이터 (원형) */
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-indicator.planned {
+  background-color: rgb(68, 131, 245);
+}
+
+.status-indicator.progress {
+  background-color: rgb(180, 115, 0);
+}
+
+.status-indicator.completed {
+  background-color: rgb(77, 154, 76);
+}
+
+.status-indicator.delayed {
+  background-color: rgb(145, 30, 158);
+}
+
+/* 카드 수 표시 */
+.column-count {
+  margin-left: 6px;
+  font-size: 14px;
+  color: rgba(55, 53, 47, 0.5);
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+/* 카드 컨테이너 */
+.column-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+}
+
+/* 카드 스타일 */
+.notion-card {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px,
+    rgba(15, 15, 15, 0.05) 0px 2px 4px;
+  transition: background 100ms ease-out 0s;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.notion-card:hover {
+  background-color: rgba(55, 53, 47, 0.03);
+}
+
+/* 카드 내용 */
+.card-content {
+  padding: 10px 14px;
+}
+
+/* 카드 제목 */
+.card-title {
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: rgb(55, 53, 47);
+}
+
+/* 카드 메타 정보 */
+.card-meta {
+  color: rgba(55, 53, 47, 0.65);
+  font-size: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.meta-item i {
+  width: 14px;
+  margin-right: 6px;
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+/* 상태 태그 */
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.status-tag.planned {
+  background-color: rgba(68, 131, 245, 0.1);
+  color: rgb(51, 126, 169);
+}
+
+.status-tag.progress {
+  background-color: rgba(180, 115, 0, 0.1);
+  color: rgb(145, 93, 0);
+}
+
+.status-tag.completed {
+  background-color: rgba(77, 154, 76, 0.1);
+  color: rgb(53, 106, 52);
+}
+
+.status-tag.delayed {
+  background-color: rgba(145, 30, 158, 0.1);
+  color: rgb(105, 36, 111);
+}
+
+/* 새 프로젝트 추가 버튼 */
+.add-card-btn {
+  padding: 8px 10px;
+  color: rgba(55, 53, 47, 0.65);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 100ms ease-out 0s;
+  display: flex;
+  align-items: center;
+}
+
+.add-card-btn i {
+  margin-right: 6px;
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+.add-card-btn:hover {
+  background-color: rgba(55, 53, 47, 0.08);
+  color: rgb(55, 53, 47);
+}
+
+/* 스크롤바 커스터마이징 */
+.board-container::-webkit-scrollbar {
+  height: 10px;
+}
+
+.board-container::-webkit-scrollbar-thumb {
+  background-color: rgba(55, 53, 47, 0.2);
+  border-radius: 10px;
+  border: 2px solid #f7f6f3;
+}
+
+.board-container::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* 컨텐츠 헤더 */
+.content-header {
+  padding: 24px 20px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 0;
+  margin-right: auto;
+  text-align: left;
+}
+
+.page-title h1 {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0;
+  text-align: left;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #808080;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-icon:hover {
+  background: var(--notion-hover-bg);
+  color: var(--notion-text);
+}
+
+.btn-icon.small {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+/* 뷰 탭 스타일 */
+.notion-view-tabs {
+  padding: 0 20px;
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--notion-border);
+  flex-shrink: 0;
+  background-color: #fff;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.notion-tab {
+  padding: 8px 12px;
+  font-size: 14px;
+  background: transparent;
+  border: none;
+  border-radius: 3px 3px 0 0;
+  color: var(--notion-gray-text);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  margin-bottom: -1px;
+}
+
+.notion-tab i {
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+.notion-tab:hover {
+  background: var(--notion-hover-bg);
+  color: var(--notion-text);
+}
+
+.notion-tab.active {
+  color: var(--notion-text);
+  background: transparent;
+  border-bottom: 2px solid var(--notion-text);
+  font-weight: 500;
+}
+
+/* 노션 콘텐츠 영역 */
+.notion-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* 툴바 스타일 */
+.notion-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.toolbar-left {
+  display: flex;
+  gap: 8px;
+}
+
+/* 노션 버튼 */
+.notion-btn {
+  padding: 6px 10px;
+  font-size: 14px;
+  background-color: var(--notion-gray);
+  border: none;
+  border-radius: 3px;
+  color: var(--notion-text);
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.notion-btn i {
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+.notion-btn:hover {
+  background: #e0e0df;
+}
+
+.notion-btn.primary {
+  background-color: var(--notion-accent);
+  color: white;
+}
+
+.notion-btn.primary:hover {
+  background-color: var(--notion-accent-hover);
+}
+
+/* 버튼 스타일 업데이트 */
+.btn-primary {
+  background: var(--notion-accent);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--notion-accent-hover);
+}
+
+/* 뷰 스타일 */
+.notion-view {
+  display: none;
+}
+
+.notion-view.active-view {
+  display: block;
+  animation: fadeIn 0.3s;
+}
+
+/* 보드 뷰 */
+.notion-board-view {
+  width: 100%;
+  padding: 0;
+}
+
+.board-columns {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+  /* 스크롤바 스타일링 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(55, 53, 47, 0.3) transparent;
+}
+
+.board-columns::-webkit-scrollbar {
+  height: 8px;
+}
+
+.board-columns::-webkit-scrollbar-thumb {
+  background-color: rgba(55, 53, 47, 0.3);
+  border-radius: 4px;
+}
+
+.board-columns::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.board-column {
+  min-width: 280px;
+  width: 280px;
+  background: #f5f5f5;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
+.column-header {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--notion-border);
+  background: #f0f0f0;
+  border-radius: 3px 3px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.column-name {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.status-indicator.planned {
+  background-color: var(--notion-blue);
+}
+
+.status-indicator.progress {
+  background-color: var(--notion-orange);
+}
+
+.status-indicator.completed {
+  background-color: var(--notion-green);
+}
+
+.status-indicator.delayed {
+  background-color: var(--notion-red);
+}
+
+.column-count {
+  margin-left: 6px;
+  font-size: 12px;
+  color: var(--notion-gray-text);
+  background: #e5e5e5;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.column-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notion-card {
+  background: white;
+  border-radius: 3px;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.notion-card:hover {
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-1px);
+}
+
+.card-content {
+  padding: 10px 12px;
+}
+
+.card-title {
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.card-meta {
+  color: var(--notion-gray-text);
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.meta-item i {
+  margin-right: 6px;
+  width: 14px;
+}
+
+.card-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  background: #ebeaea;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--notion-accent);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 12px;
+  color: var(--notion-gray-text);
+}
+
+.add-card-btn {
+  padding: 8px 10px;
+  color: var(--notion-gray-text);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.add-card-btn i {
+  margin-right: 6px;
+}
+
+.add-card-btn:hover {
+  background: #e5e5e5;
+  color: var(--notion-text);
+}
+
+/* 테이블 뷰 */
+.notion-table-view {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.notion-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.notion-table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--notion-gray-text);
+  background: #fbfbfa;
+  border-bottom: 1px solid var(--notion-border);
+}
+
+.notion-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--notion-border);
+  font-size: 14px;
+}
+
+.notion-table tr:hover {
+  background: #fafafa;
+}
+
+.cell-name a {
+  color: var(--notion-text);
+  font-weight: 500;
+}
+
+.cell-name a:hover {
+  text-decoration: underline;
+}
+
+.cell-user {
+  display: flex;
+  align-items: center;
+}
+
+.cell-user i {
+  margin-right: 6px;
+}
+
+.cell-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cell-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.cell-status.status-completed {
+  background: rgba(15, 123, 108, 0.1);
+  color: var(--notion-green);
+}
+
+.cell-status.status-in_progress {
+  background: rgba(217, 115, 13, 0.1);
+  color: var(--notion-orange);
+}
+
+.cell-status.status-planned {
+  background: rgba(11, 110, 153, 0.1);
+  color: var(--notion-blue);
+}
+
+.cell-status.status-delayed {
+  background: rgba(224, 62, 62, 0.1);
+  color: var(--notion-red);
+}
+
+/* 타임라인 뷰 */
+.notion-timeline-view {
+  overflow-x: auto;
+}
+
+.timeline-wrapper {
+  padding: 0 20px;
+  width: 100%;
+}
+
+.timeline-header {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--notion-border);
+  margin-bottom: 20px;
+}
+
+.timeline-scale {
+  display: flex;
+}
+
+.month {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  color: var(--notion-gray-text);
+}
+
+.timeline-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.timeline-item-label {
+  width: 200px;
+  padding-right: 20px;
+}
+
+.timeline-item-name {
+  display: block;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.timeline-item-date {
+  font-size: 12px;
+  color: var(--notion-gray-text);
+}
+
+.timeline-item-bar {
+  height: 24px;
+  background: rgba(11, 110, 153, 0.1);
+  width: var(--duration);
+  border-radius: 3px;
+  position: relative;
+  flex: 1;
+}
+
+.timeline-item-bar.status-completed {
+  background: rgba(15, 123, 108, 0.1);
+}
+
+.timeline-item-bar.status-in_progress {
+  background: rgba(217, 115, 13, 0.1);
+}
+
+.timeline-item-bar.status-delayed {
+  background: rgba(224, 62, 62, 0.1);
+}
+
+.timeline-item-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: rgba(11, 110, 153, 0.3);
+  border-radius: 3px;
+}
+
+/* 리스트 뷰 */
+.notion-list-view {
+  width: 100%;
+}
+
+.list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 100%;
+}
+
+.list-item {
+  background: white;
+  border-radius: 4px;
+  box-shadow: var(--card-shadow);
+  padding: 16px;
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.list-item:hover {
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-1px);
+}
+
+.list-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.list-item-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.list-item-status {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.list-item-status.status-completed {
+  background: rgba(15, 123, 108, 0.1);
+  color: var(--notion-green);
+}
+
+.list-item-status.status-in_progress {
+  background: rgba(217, 115, 13, 0.1);
+  color: var(--notion-orange);
+}
+
+.list-item-status.status-planned {
+  background: rgba(11, 110, 153, 0.1);
+  color: var(--notion-blue);
+}
+
+.list-item-status.status-delayed {
+  background: rgba(224, 62, 62, 0.1);
+  color: var(--notion-red);
+}
+
+.list-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.info-item {
+  color: var(--notion-gray-text);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+}
+
+.info-item i {
+  margin-right: 6px;
+}
+
+.list-item-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* 빈 상태 메시지 */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--notion-gray-text);
+}
+
+.empty-state i {
+  font-size: 32px;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--notion-text);
+}
+
+.empty-state p {
+  margin: 0 0 16px;
+  font-size: 14px;
+}
+
+/* 드래그 앤 드롭 효과 */
+.card-ghost {
+  opacity: 0.5;
+  background: #f0f0f0;
+  box-shadow: none;
+}
+
+.card-drag {
+  transform: rotate(1deg);
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 반응형 조정 */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 0;
+    transform: translateX(-100%);
+  }
+
+  .content-header,
+  .notion-view-tabs,
+  .notion-content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* 로그인 폼 스타일 */
+.auth-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 4px;
+  box-shadow: var(--card-shadow);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.auth-header p {
+  color: var(--notion-gray-text);
+  margin: 0;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid var(--notion-border);
+  border-radius: 3px;
+  margin-bottom: 16px;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--notion-accent);
+  box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
+}
+
+.d-grid {
+  display: grid;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.btn-primary {
+  background: var(--notion-accent);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--notion-accent-hover);
+}
+
+.mb-3 {
+  margin-bottom: 16px;
+}
+
+/* Notion 레이아웃 스타일 */
+.notion-layout {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* 사이드바 스타일 */
+.notion-sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #fbfbfa;
+  border-right: 1px solid #ebebeb;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.2s ease;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-collapsed .notion-sidebar {
+  width: 0;
+}
+
+.sidebar-header {
+  padding: 14px 14px 10px;
+  margin-bottom: 10px;
+}
+
+.sidebar-logo {
+  color: #37352f;
+  font-weight: 600;
+  font-size: 18px;
+  text-decoration: none;
+  display: block;
+  padding: 4px 2px;
+}
+
+.sidebar-logo:hover {
+  color: #37352f;
+}
+
+.sidebar-section {
+  padding: 4px 8px;
+  margin-bottom: 20px;
+}
+
+.sidebar-title {
+  text-transform: uppercase;
+  color: #9b9a97;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+}
+
+.sidebar-link {
+  margin-bottom: 2px;
+}
+
+.sidebar-link a {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 3px;
+  color: #37352f;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.sidebar-link a:hover,
+.sidebar-page:hover {
+  background-color: rgba(55, 53, 47, 0.08);
+}
+
+.sidebar-link.active a {
+  background-color: rgba(55, 53, 47, 0.08);
+  font-weight: 500;
+}
+
+.sidebar-link i,
+.sidebar-page i {
+  width: 20px;
+  margin-right: 8px;
+  font-size: 14px;
+  color: #9b9a97;
+}
+
+.sidebar-pages {
+  margin-top: 2px;
+}
+
+.sidebar-page {
+  display: flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  color: #37352f;
+  font-size: 14px;
+}
+
+.add-page {
+  display: flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-top: 4px;
+  color: #9b9a97;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.add-page:hover {
+  background-color: rgba(55, 53, 47, 0.08);
+  color: #37352f;
+}
+
+.add-page i {
+  width: 20px;
+  margin-right: 8px;
+  font-size: 12px;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 14px;
+  border-top: 1px solid #ebebeb;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.user-info i {
+  font-size: 16px;
+  margin-right: 8px;
+  color: #9b9a97;
+}
+
+.logout-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 3px;
+  color: #9b9a97;
+  margin-top: 8px;
+  transition: all 0.2s ease;
+}
+
+.logout-link:hover {
+  background-color: rgba(55, 53, 47, 0.08);
+  color: #37352f;
+}
+
+.login-link {
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 3px;
+  color: #37352f;
+  text-decoration: none;
+  font-size: 14px;
+  background-color: rgba(46, 170, 220, 0.2);
+  color: #0b6e99;
+}
+
+.login-link:hover {
+  background-color: rgba(46, 170, 220, 0.3);
+}
+
+.login-link i {
+  margin-right: 8px;
+}
+
+/* 메인 영역 스타일 */
+.notion-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* 상단 바 스타일 */
+.notion-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 45px;
+  padding: 0 14px;
+  border-bottom: 1px solid #ebebeb;
+  background-color: #fff;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.menu-toggle {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  color: #9b9a97;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.menu-toggle:hover {
+  background-color: rgba(55, 53, 47, 0.08);
+  color: #37352f;
+}
+
+.breadcrumb {
+  font-size: 14px;
+  font-weight: 500;
+  color: #37352f;
+  margin: 0;
+  padding: 0;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.topbar-action {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  color: #9b9a97;
+  cursor: pointer;
+}
+
+.topbar-action:hover {
+  background-color: rgba(55, 53, 47, 0.08);
+  color: #37352f;
+}
+
+/* 메시지 알림 스타일 */
+.notion-messages {
+  margin: 8px;
+}
+
+.notion-message {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 3px;
+  background-color: #f5f5f5;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.notion-message.success {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.notion-message.error {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.notion-message.warning {
+  background-color: #fff8e1;
+  color: #ffa000;
+}
+
+.message-close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* 콘텐츠 영역 스타일 */
+.notion-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 0;
+}
+
+/* 기존 클래스 덮어쓰기 */
+.full-width {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .notion-sidebar {
+    position: fixed;
+    z-index: 1000;
+    transform: translateX(-100%);
+  }
+
+  .sidebar-collapsed .notion-sidebar {
+    transform: translateX(0);
+    width: 250px;
+  }
+}
+
+/* 노션 스타일 최대 너비 컨테이너 - 제거 */
+.notion-max-width {
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* 헤더 및 탭 영역도 최대 너비 제한 */
+.content-header,
+.notion-view-tabs {
+  max-width: none;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* 보드 뷰 스크롤 영역 조정 */
+.board-columns {
+  max-width: none;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  /* 스크롤바 스타일링 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(55, 53, 47, 0.3) transparent;
+}
+
+/* Chrome용 스크롤바 스타일 */
+.board-columns::-webkit-scrollbar {
+  height: 8px;
+}
+
+.board-columns::-webkit-scrollbar-thumb {
+  background-color: rgba(55, 53, 47, 0.3);
+  border-radius: 4px;
+}
+
+.board-columns::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* 테이블 뷰 조정 */
+.notion-table-view {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* 타임라인 뷰 조정 */
+.timeline-wrapper {
+  min-width: 100%;
+}
+
+/* 리스트 뷰 조정 */
+.list-items {
+  max-width: 100%;
+}
+
+/* 반응형 조정 */
+@media (max-width: 1080px) {
+  .notion-max-width,
+  .content-header,
+  .notion-view-tabs {
+    max-width: 100%;
+  }
+}
+
+/* 뷰 컨테이너 */
+.notion-views {
+  flex: 1;
+  overflow: auto;
+}
+
+/* 뷰 스타일 */
+.notion-view {
+  display: none;
+  padding: 0;
+}
+
+.notion-view.active-view {
+  display: block;
+  animation: fadeIn 0.3s;
+}
+
+/* 테이블 뷰 스타일 */
+.notion-table-wrapper {
+  padding: 20px;
+}
+
+/* 리스트 뷰 스타일 */
+.list-items {
+  padding: 20px;
+}
+
+/* 상태 태그 한글 스타일 */
+.status-tag.planned {
+  background-color: rgba(68, 131, 245, 0.1);
+  color: rgb(51, 126, 169);
+}
+
+.status-tag.progress {
+  background-color: rgba(180, 115, 0, 0.1);
+  color: rgb(145, 93, 0);
+}
+
+.status-tag.delayed {
+  background-color: rgba(145, 30, 158, 0.1);
+  color: rgb(105, 36, 111);
+}
+
+.status-tag.completed {
+  background-color: rgba(77, 154, 76, 0.1);
+  color: rgb(53, 106, 52);
+}
+
+/* Notion 폼 스타일 */
+.notion-form-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: var(--card-shadow);
+}
+
+.notion-form-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--notion-border);
+}
+
+.page-icon {
+  width: 46px;
+  height: 46px;
+  background-color: var(--notion-accent);
+  color: white;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  font-size: 20px;
+}
+
+.form-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--notion-text);
+  margin: 0;
+}
+
+.notion-form-section {
+  margin-bottom: 24px;
+}
+
+.notion-form-group {
+  margin-bottom: 20px;
+}
+
+.notion-form-label {
+  display: block;
+  font-size: 13px;
+  color: #555;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.notion-input-wrapper {
+  position: relative;
+  border: 1px solid rgba(55, 53, 47, 0.2);
+  border-radius: 3px;
+  background-color: white;
+  transition: all 0.2s ease;
+}
+
+.notion-input-wrapper.focused {
+  border-color: var(--notion-accent);
+  box-shadow: 0 0 0 2px rgba(43, 108, 176, 0.2);
+}
+
+.notion-input-wrapper.date-input i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 13px;
+}
+
+.notion-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 3px;
+  color: var(--notion-text);
+  font-family: var(--notion-font);
+  background: transparent;
+}
+
+.notion-input:focus {
+  outline: none;
+}
+
+.notion-input-wrapper.date-input input {
+  padding-left: 32px;
+}
+
+.notion-select-wrapper {
+  position: relative;
+}
+
+.notion-select-wrapper select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid rgba(55, 53, 47, 0.2);
+  border-radius: 3px;
+  background-color: white;
+  color: var(--notion-text);
+  appearance: none;
+  cursor: pointer;
+}
+
+.notion-select-wrapper select:focus {
+  outline: none;
+  border-color: var(--notion-accent);
+  box-shadow: 0 0 0 2px rgba(43, 108, 176, 0.2);
+}
+
+.notion-select-wrapper::after {
+  content: "\25BC";
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #777;
+  font-size: 10px;
+}
+
+.notion-form-error {
+  color: #e53e3e;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.notion-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--notion-border);
+}
+
+.notion-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 3px;
+  border: none;
+  background-color: #f5f5f5;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.notion-button:hover {
+  background-color: #e8e8e8;
+}
+
+.notion-button.primary {
+  background-color: var(--notion-accent);
+  color: white;
+}
+
+.notion-button.primary:hover {
+  background-color: var(--notion-accent-hover);
+}
+
+/* 포커스 상태 스타일 일관성 */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--notion-accent) !important;
+  box-shadow: 0 0 0 2px rgba(43, 108, 176, 0.2) !important;
+}
+
+/* 프로그레스 바 색상도 일관되게 변경 */
+.progress-fill,
+.progress-fill-preview {
+  background-color: var(--notion-accent);
+}
+
+/* 진행률 표시 미리보기 영역 개선 */
+.progress-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 0 12px 12px;
+}
+
+.progress-bar-preview {
+  flex: 1;
+  height: 6px;
+  background-color: #edf2f7;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill-preview {
+  height: 100%;
+  background-color: var(--notion-accent);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.progress-text-preview {
+  font-size: 12px;
+  color: #718096;
+  min-width: 35px;
+  text-align: right;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+  .notion-form-container {
+    padding: 20px;
+    margin: 20px;
+    width: auto;
+  }
+
+  .notion-form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form-title {
+    font-size: 24px;
+  }
+}
