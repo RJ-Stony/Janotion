@@ -1,6 +1,10 @@
 # Janotion
 
-Notion 스타일의 프로젝트/작업 관리 Django 웹서비스
+- Notion 스타일의 프로젝트/작업 관리 Django 웹서비스
+
+![image](https://github.com/user-attachments/assets/79c93e68-8d35-4257-971a-36e2f824781a)
+![image](https://github.com/user-attachments/assets/242aa75f-7eff-4e62-8e9a-623289962338)
+![image](https://github.com/user-attachments/assets/5151eed7-09bd-4bb2-97f1-6bf0fecba7c8)
 
 ## 주요 특징
 
